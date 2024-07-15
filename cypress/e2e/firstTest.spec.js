@@ -38,4 +38,39 @@ describe('First test suite', () => {
         cy.get('[data-cy="imputEmail1"')
 
     })
+
+    it.only('Second test case', () => {
+        cy.visit('/')
+        cy.contains('Forms').click()
+        cy.contains('Form Layouts').click()
+
+        //Theory
+        //get() method is used to get the element on the page by locator globally
+        //find() method is used to find the element within the element(child) on the page by locator
+        //contains() method is used to find the element by HTML text,  and by text and locator
+
+        cy.contains('Sign in')
+        cy.contains(' [status="warning"]', 'Sign in')
+
+        //❗️сначала один метод, потом find
+        cy.contains('nb-card', 'Horizontal form').find('button')
+        cy.contains('nb-card', 'Horizontal form').contains('Sign in')
+
+        //cypress chains and DOM
+        cy.get('#inputEmail3')
+            .parents('form')
+            .find('button')
+            .should('contain', 'Sign in')
+            .parents('form')
+            .find('nb-checkbox')
+            .click()
+
+
+
+
+
+
+
+
+    })
 })
