@@ -3,12 +3,10 @@
 
 describe('First test suite', () => {
 
-
     it('First test case', () => {
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
-
 
         //find by tag name
         cy.get('input')
@@ -66,7 +64,7 @@ describe('First test suite', () => {
             .click()
 
     })
-    it.only('Save subject of the command', () => {
+    it('Save subject of the command', () => {
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
@@ -96,4 +94,41 @@ describe('First test suite', () => {
             cy.wrap(usingTheGridForm).find('[for="inputPassword2"]').should('contain', 'Password')
         })
     })
+
+    //🔴 Extracting test values
+    it.only(' Extract text values', () => {
+        cy.visit('/')
+        cy.contains('Forms').click()
+        cy.contains('Form Layouts').click()
+        //1. 
+        cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+
+        //2.
+        cy.get('[for="exampleInputEmail1"]').then(label => {
+            const labelText = label.text()
+            expect(labelText).to.equal('Email address')
+            cy.wrap(label).should('contain', 'Email address')
+        })
+
+        //3.
+        cy.get('[for="exampleInputEmail1"]').invoke('text').then(text => {
+            expect(text).to.equal('Email address')
+            //can save as an alias:
+            cy.get('[for="exampleInputEmail1"]').invoke('text').as('labelText').should('contain', 'Email address')
+        })
+
+        //4.
+        cy.get('[for="exampleInputEmail1"]').invoke('attr', 'class').then(classValue => {
+            expect(classValue).to.equal('label')
+        })
+
+        //Invoke properties
+        cy.get('#exampleInputEmail1').type('test@test.com')
+        cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then((property) => {
+            expect(property).to.equal('test@test.com')
+
+        })
+
+    })
+
 })
