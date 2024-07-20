@@ -100,31 +100,41 @@ describe('First test suite', () => {
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
+
+
         //1. 
         cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
 
-        //2.
+
+        //but what about if we want to save the extracted text into the variable and use it later?
+
+
+        //2. Using the JQuery text() method to extract the html text:
+
         cy.get('[for="exampleInputEmail1"]').then(label => {
             const labelText = label.text()
             expect(labelText).to.equal('Email address')
             cy.wrap(label).should('contain', 'Email address')
         })
 
-        //3.
+        //3. Using cypress method invoke() to extract the text:
+
         cy.get('[for="exampleInputEmail1"]').invoke('text').then(text => {
             expect(text).to.equal('Email address')
             //can save as an alias:
             cy.get('[for="exampleInputEmail1"]').invoke('text').as('labelText').should('contain', 'Email address')
         })
 
-        //4.
+        //4. Getting the value of class or any other attribute:
+
         cy.get('[for="exampleInputEmail1"]').invoke('attr', 'class').then(classValue => {
             expect(classValue).to.equal('label')
         })
 
-        //Invoke properties
+        //5. Invoke properties from the input field:
         cy.get('#exampleInputEmail1').type('test@test.com')
-        cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com').then((property) => {
+        cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com')
+            .then((property) => {
             expect(property).to.equal('test@test.com')
 
         })
