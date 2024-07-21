@@ -64,6 +64,8 @@ describe('First test suite', () => {
             .click()
 
     })
+    //❗️Сохранение локаторов
+
     it('Save subject of the command', () => {
         cy.visit('/')
         cy.contains('Forms').click()
@@ -74,11 +76,12 @@ describe('First test suite', () => {
         // cy.contains('nb-card', 'Using the Grid').find('[for="inputEmail1"]').should('contain', 'Email')
         // cy.contains('nb-card', 'Using the Grid').find('[for="inputPassword2"]').should('contain', 'Password')
 
-        //here we are duplicating the code, we can not save the repeating code in a variable: INCORRECT APPROACH:
+        //🔴here we are duplicating the code, we can not save the repeating code in a variable: INCORRECT APPROACH:
         // const usingTheGrid = cy.contains('nb-card', 'Using the Grid')
         // usingTheGrid.find('[for="inputEmail1"]').should('contain', 'Email')//сработает
-        // usingTheGrid.find('[for="inputPassword2"]').should('contain', 'Password') //а два не сработает уже, тк
+        // usingTheGrid.find('[for="inputPassword2"]').should('contain', 'Password') //а два не сработает уже, тк ищет только один раз
 
+        //поэтому используем алиасы
         // ❗️Saving locators - CORRECT APPROACH:
 
         //1. Cypress alias
@@ -96,7 +99,7 @@ describe('First test suite', () => {
     })
 
     //🔴 Extracting test values
-    it.only(' Extract text values', () => {
+    it(' Extract text values', () => {
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
@@ -135,10 +138,32 @@ describe('First test suite', () => {
         cy.get('#exampleInputEmail1').type('test@test.com')
         cy.get('#exampleInputEmail1').invoke('prop', 'value').should('contain', 'test@test.com')
             .then((property) => {
-            expect(property).to.equal('test@test.com')
+                expect(property).to.equal('test@test.com')
 
-        })
+            })
 
     })
+    it('Radio button', () => {
+        cy.visit('/')
+        cy.contains('Forms').click()
+        cy.contains('Form Layouts').click()
 
+        //1. Using the cypress method check() to select the radio button:
+        cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then(radioButtons => {
+            // cy.wrap(radioButtons).first().check({force: true}).should('be.checked')
+            cy.wrap(radioButtons).eq(0).check({ force: true }).should('be.checked')
+            cy.wrap(radioButtons).eq(1).check({ force: true }).should('be.checked')
+            cy.wrap(radioButtons).eq(0).should('not.be.checked')
+            cy.wrap(radioButtons).eq(2).should('be.disabled')
+        }
+        )
+    })
+
+    it.only('Checkboxes', () => {
+        cy.visit('/')
+        cy.contains('Modal & Overlays').click()
+        cy.contains('Toastr').click()
+
+        cy.get('[type="checkbox"]').check({ force: true })
+    })
 })
