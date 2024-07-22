@@ -159,11 +159,42 @@ describe('First test suite', () => {
         )
     })
 
-    it.only('Checkboxes', () => {
+    it('Checkboxes', () => {
         cy.visit('/')
         cy.contains('Modal & Overlays').click()
         cy.contains('Toastr').click()
 
         cy.get('[type="checkbox"]').check({ force: true })
+    })
+
+    it.only('Datepicker', () => {
+
+        function selectDay(day) {
+            let date = new Date()
+            date.setDate(date.getDate() + day)
+            let futureMonth = date.toLocaleDateString('en-US', { month: 'short' })
+            let futureDay = date.getDate()
+            let futureYear = date.getFullYear()
+            let dateToAssert = `${futureMonth} ${futureDay}, ${futureYear}`
+            cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then(dateAttribute => {
+                if (!dateAttribute.includes(futureMonth) || !dateAttribute.includes(futureYear)) {
+                    cy.get('[data-name="chevron-right"]').click()
+                    selectDay(day)
+                } else {
+                    cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
+                }
+            })
+            return dateToAssert
+        }
+
+        cy.visit('/')
+        cy.contains('Forms').click()
+        cy.contains('Datepicker').click()
+        cy.contains('nb-card', 'Common Datepicker').find('input').then(input => {
+            cy.wrap(input).click()
+            const dateToAssert = selectDay(100)
+            cy.wrap(input).invoke('prop', 'value').should('contain', dateToAssert)
+            cy.wrap(input).should('have.value', dateToAssert)
+        })
     })
 })
