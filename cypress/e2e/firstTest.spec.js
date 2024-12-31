@@ -29,11 +29,11 @@ describe('First test suite', () => {
         //by two attributes
         cy.get('[placeholder="Email"][fullwidth]')
 
-        //by tag , attribute, id and class value
+        //by tag , attribute, id and class
         cy.get('input[placeholder="Email"]#inputEmail1.input-full-width')
 
         //❗️by cypress testId
-        cy.get('[data-cy="imputEmail1"')
+        cy.get('[data-cy="imputEmail1"]')
 
     })
 
@@ -43,7 +43,7 @@ describe('First test suite', () => {
         cy.contains('Form Layouts').click()
 
         //Theory
-        //get() method is used to get the element on the page by locator globally
+        //get() method is used to get the element on the entire page by locator globally
         //find() method is used to find the element within the element(child) on the page by locator
         //contains() method is used to find the element by HTML text,  and by text and locator
 
@@ -66,22 +66,20 @@ describe('First test suite', () => {
     })
     //❗️Сохранение локаторов
 
-    it('Save subject of the command', () => {
+    it.only('Save subject of the command', () => {
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Form Layouts').click()
-
-
-
-        // cy.contains('nb-card', 'Using the Grid').find('[for="inputEmail1"]').should('contain', 'Email')
-        // cy.contains('nb-card', 'Using the Grid').find('[for="inputPassword2"]').should('contain', 'Password')
+        cy.contains('nb-card', 'Using the Grid').find('[for="inputEmail1"]').should('contain', 'Email')
+        cy.contains('nb-card', 'Using the Grid').find('[for="inputPassword2"]').should('contain', 'Password')
 
         //🔴here we are duplicating the code, we can not save the repeating code in a variable: INCORRECT APPROACH:
         // const usingTheGrid = cy.contains('nb-card', 'Using the Grid')
         // usingTheGrid.find('[for="inputEmail1"]').should('contain', 'Email')//сработает
         // usingTheGrid.find('[for="inputPassword2"]').should('contain', 'Password') //а два не сработает уже, тк ищет только один раз
 
-        //поэтому используем алиасы
+        //поэтому используем алиасы etc...
+
         // ❗️Saving locators - CORRECT APPROACH:
 
         //1. Cypress alias
@@ -105,7 +103,7 @@ describe('First test suite', () => {
         cy.contains('Form Layouts').click()
 
 
-        //1. 
+        //1.
         cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
 
 
@@ -230,6 +228,7 @@ describe('First test suite', () => {
         cy.contains('Smart Table').click()
 
         //1. Get the row of the table by the text of the cell:
+      //Modify the age based on the name
         cy.get('tbody').contains('tr', 'Larry').then(tableRow => {
             cy.wrap(tableRow).find('.nb-edit').click()
             cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('25')
@@ -238,6 +237,7 @@ describe('First test suite', () => {
         })
 
         //2. Get the row by index:
+      //Add a new record to the table
         cy.get('thead').find('.nb-plus').click()
         cy.get('thead').find('tr').eq(2).then(tableRow => {
             cy.wrap(tableRow).find('[placeholder="First Name"]').type('Adam')
@@ -249,6 +249,7 @@ describe('First test suite', () => {
             cy.wrap(tableColumns).eq(2).should('contain', 'Adam')
             cy.wrap(tableColumns).eq(3).should('contain', 'Sandler')
         })
+
 
 
         //3. Get each row of the table and assert the values:
@@ -287,12 +288,13 @@ describe('First test suite', () => {
     })
 
     //interacting with alerts and dialog boxes
-    it.only('alert/dialog box', () => {
+    it('alert/dialog box', () => {
         cy.visit('/')
         cy.contains('Tables & Data').click()
         cy.contains('Smart Table').click()
 
         //1
+      //Delete the value from the table
         // cy.get('tbody tr').first().find('.nb-trash').click()
         // cy.on('window:confirm', (confirm) => {
         //     expect(confirm).to.equal('Are you sure you want to delete?')
